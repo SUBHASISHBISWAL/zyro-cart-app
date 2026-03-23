@@ -147,8 +147,8 @@
                             <a href="<?php echo $base; ?>pages/contact.php" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0">
-                            <a href="" class="nav-item nav-link">Login</a>
-                            <a href="" class="nav-item nav-link">Register</a>
+                            <a href="<?php echo $base; ?>pages/login.php" class="nav-item nav-link">Login</a>
+                            <a href="<?php echo $base; ?>pages/login.php?tab=signup" class="nav-item nav-link">Register</a>
                         </div>
                     </div>
                 </nav>
