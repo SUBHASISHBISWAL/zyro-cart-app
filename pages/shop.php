@@ -1,6 +1,6 @@
 <?php $base = '../'; include '../layouts/header.php'; ?>
  <!-- Page Header Start -->
-    <div class="container-fluid bg-secondary mb-5">
+    <!-- <div class="container-fluid bg-secondary mb-5">
         <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
             <h1 class="font-weight-semi-bold text-uppercase mb-3">Shop</h1>
             <div class="d-inline-flex">
@@ -9,8 +9,23 @@
                 <p class="m-0">Shop</p>
             </div>
         </div>
+    </div> -->
+    <div class="position-relative">
+
+    <div class="position-absolute w-100 text-center" style="top: 20px; z-index: 10;">
+    <div class="d-inline-flex text-white">
+                <p class="m-0"><a href="<?php echo $base; ?>index.php">Home</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Shop</p>
+            </div>
     </div>
-    <!-- Page Header End -->
+    <!--  Your Slider -->
+    <div class="carousel">
+        <!-- slider images here -->
+    </div>
+</div>
+  <?php include '../components/slider.php'; ?>
+       <!-- Page Header End -->
          <!-- Shop Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5">
