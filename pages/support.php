@@ -21,7 +21,7 @@
 }
 
 .support-title h2 {
-  color: #D19C97;
+  color: #E15260;
   font-weight: 700;
 }
 

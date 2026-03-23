@@ -14,7 +14,7 @@
 
 .help-title h2 {
   font-weight: 700;
-  color: #D19C97;
+  color: #E15260;
 }
 
 .faq-box {
