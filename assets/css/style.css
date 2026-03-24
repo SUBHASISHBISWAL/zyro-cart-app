@@ -9582,3 +9582,44 @@ a.text-dark:hover, a.text-dark:focus {
     transform: translateY(-15px);
   }
 }
+
+
+
+
+
+
+
+/* shop-slider */
+
+
+/* overlay */
+.shop-banner::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+}
+
+/* content above overlay */
+.shop-banner .text-center {
+    position: relative;
+    z-index: 2;
+}
+
+/* cards */
+.category-card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.category-card img {
+    height: 180px;
+    object-fit: cover;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
