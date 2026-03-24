@@ -67,7 +67,7 @@
   text-align: center;
   margin-top: 25px;
   padding: 12px;
-  background: #D19C97;
+  background: #E15260;
   color: white;
   border-radius: 8px;
   text-decoration: none;

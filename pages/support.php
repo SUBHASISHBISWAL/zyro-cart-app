@@ -26,7 +26,7 @@
 }
 
 .support-btn {
-  background: #D19C97;
+  background: #E15260;
   border: none;
   color: #fff;
 }
