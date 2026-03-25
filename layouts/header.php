@@ -1,4 +1,10 @@
-<?php $base = isset($base) ? $base : ''; ?>
+<?php
+// Ye line check karegi ki session start hai ya nahi
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$base = isset($base) ? $base : '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,34 +15,28 @@
     <meta content="Free HTML Templates" name="keywords">
     <meta content="Free HTML Templates" name="description">
 
-    <!-- Favicon -->
     <link href="<?php echo $base; ?>assets/img/favicon.ico" rel="icon">
 
-    <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
-    <!-- Libraries Stylesheet -->
     <link href="<?php echo $base; ?>assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
-    <!-- Customized Bootstrap Stylesheet -->
     <link href="<?php echo $base; ?>assets/css/style.css" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Topbar Start -->
     <div class="container-fluid">
         <div class="row bg-secondary py-2 px-xl-5">
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="d-inline-flex align-items-center">
-                    <a class="text-dark" href="">FAQs</a>
-                    <span class="text-muted px-2">|</span>
-                    <a class="text-dark" href="">Help</a>
-                    <span class="text-muted px-2">|</span>
-                    <a class="text-dark" href="">Support</a>
+                   <a class="text-dark" href="<?php echo $base; ?>pages/faqs.php">FAQs</a>
+                   <span class="text-muted px-2">|</span>
+                   <a class="text-dark" href="<?php echo $base; ?>pages/help.php">Help</a>
+                   <span class="text-muted px-2">|</span>
+                   <a class="text-dark" href="<?php echo $base; ?>pages/support.php">Support</a>
                 </div>
             </div>
             <div class="col-lg-6 text-center text-lg-right">
@@ -92,8 +92,6 @@
             </div>
         </div>
     </div>
-    <!-- Topbar End -->
-
     <div class="container-fluid">
         <div class="row border-top px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
@@ -146,15 +144,27 @@
                             </div>
                             <a href="<?php echo $base; ?>pages/contact.php" class="nav-item nav-link">Contact</a>
                         </div>
+
                         <div class="navbar-nav ml-auto py-0">
-                            <a href="<?php echo $base; ?>pages/login.php" class="nav-item nav-link">Login</a>
-                            <a href="<?php echo $base; ?>pages/login.php?tab=signup" class="nav-item nav-link">Register</a>
+                            <?php if(isset($_SESSION['user_id'])): ?>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="padding-top: 20px;">
+                                        <i class="fas fa-user-circle fa-lg text-primary"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right rounded-0 m-0">
+                                        <a href="<?php echo $base; ?>pages/profile.php" class="dropdown-item">My Profile</a>
+                                        <a href="<?php echo $base; ?>pages/orders.php" class="dropdown-item">My Orders</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a href="<?php echo $base; ?>logout.php" class="dropdown-item text-danger">Logout</a>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <a href="<?php echo $base; ?>pages/login.php" class="nav-item nav-link">Login</a>
+                                <a href="<?php echo $base; ?>pages/login.php?tab=signup" class="nav-item nav-link">Register</a>
+                            <?php endif; ?>
                         </div>
-                    </div>
+                        </div>
                 </nav>
             </div>
         </div>
     </div>
-    <!-- Navbar Start -->
-
-    <!-- Navbar End -->
