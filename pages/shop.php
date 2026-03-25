@@ -68,7 +68,7 @@
                     </form>
                 </div>
                 <!-- Price End -->
-                
+
                 <!-- Color Start -->
                 <div class="border-bottom mb-4 pb-4">
                     <h5 class="font-weight-semi-bold mb-4">Filter by color</h5>
@@ -357,7 +357,7 @@
     <div class="row px-xl-5">
         <div class="col-lg-3 col-md-12">
             </div>
-        
+
         <div class="col-lg-9 col-md-12">
             <div class="row pb-3" id="dynamic-products">
                 </div>
@@ -375,7 +375,7 @@
 $(document).ready(function() {
     function loadShopProducts() {
         $.ajax({
-            url: '../assets/api/get_products.php', 
+            url: '../api/products/get_products.php',
             type: 'GET',
             dataType: 'json',
             success: function(response) {
@@ -388,7 +388,7 @@ $(document).ready(function() {
                 response.forEach(product => {
                     // Use a fallback for images if the URL is empty
                     let img = product.image_url ? product.image_url : '../assets/img/default.jpg';
-                    
+
                     html += `
                     <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                         <div class="card product-item border-0 mb-4 shadow-sm">
