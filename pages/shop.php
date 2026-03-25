@@ -24,7 +24,7 @@
         <!-- slider images here -->
     </div>
 </div>
-  <?php include '../components/slider.php'; ?>
+  <?php include '../components/shop-slider.php'; ?>
        <!-- Page Header End -->
          <!-- Shop Start -->
     <div class="container-fluid pt-5">
