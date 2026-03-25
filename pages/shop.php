@@ -149,7 +149,7 @@
 
 
             <!-- Shop Product Start -->
-            <div class="col-lg-9 col-md-12">
+            <!-- <div class="col-lg-9 col-md-12">
                 <div class="row pb-3">
                     <div class="col-12 pb-1">
                         <div class="d-flex align-items-center justify-content-between mb-4">
@@ -351,10 +351,80 @@
                         </nav>
                     </div>
                 </div>
+            </div> -->
+
+            <div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-3 col-md-12">
             </div>
+        
+        <div class="col-lg-9 col-md-12">
+            <div class="row pb-3" id="dynamic-products">
+                </div>
+        </div>
+    </div>
+</div>
             <!-- Shop Product End -->
         </div>
     </div>
     <!-- Shop End -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    function loadShopProducts() {
+        $.ajax({
+            url: '../assets/api/get_products.php', 
+            type: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if(response.length === 0) {
+                    $('#dynamic-products').html('<div class="col-12 text-center">No products found.</div>');
+                    return;
+                }
+
+                let html = '';
+                response.forEach(product => {
+                    // Use a fallback for images if the URL is empty
+                    let img = product.image_url ? product.image_url : '../assets/img/default.jpg';
+                    
+                    html += `
+                    <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                        <div class="card product-item border-0 mb-4 shadow-sm">
+                            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                <img class="img-fluid w-100" src="${img}" alt="${product.name}">
+                            </div>
+                            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                <h6 class="text-truncate mb-3">${product.name}</h6>
+                                <div class="d-flex justify-content-center">
+                                    <h6>$${product.price}</h6>
+                                    ${product.old_price ? `<h6 class="text-muted ml-2"><del>$${product.old_price}</del></h6>` : ''}
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between bg-light border">
+                                <a href="detail.php?id=${product.id}" class="btn btn-sm text-dark p-0">
+                                    <i class="fas fa-eye text-primary mr-1"></i>View Detail
+                                </a>
+                                <a href="javascript:void(0)" class="btn btn-sm text-dark p-0" onclick="addToCart(${product.id})">
+                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart
+                                </a>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+
+                $('#dynamic-products').html(html);
+            },
+            error: function(xhr, status, error) {
+                console.error("Error loading products:", error);
+                $('#dynamic-products').html('<div class="col-12 text-center text-danger">Unable to load products.</div>');
+            }
+        });
+    }
+
+    loadShopProducts();
+});
+</script>
 
        <?php include '../layouts/footer.php' ?>
