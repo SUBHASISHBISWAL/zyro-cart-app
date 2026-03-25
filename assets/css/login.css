@@ -15,7 +15,15 @@ body{
     background: linear-gradient(90deg, #e2e2e2, #c9d6ff);
     
 }
-
+.alert.alert-danger {
+    background: #ec41553d;
+    border-radius: 4px;
+    color: #d11a1a;
+    text-align: left;
+    padding: 10px;
+    margin-top: 18px;
+    padding-left: 20px;
+}
 .container{
     position: relative;
     width: 850px;

@@ -1,8 +1,9 @@
 <?php
 // Ye line check karegi ki session start hai ya nahi
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+
+session_start();
+
+
 $base = isset($base) ? $base : '';
 ?>
 <!DOCTYPE html>
@@ -149,13 +150,13 @@ $base = isset($base) ? $base : '';
                             <?php if(isset($_SESSION['user_id'])): ?>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="padding-top: 20px;">
-                                        <i class="fas fa-user-circle fa-lg text-primary"></i>
+                                        <i class="fas fa-user-circle fa-lg text-primary"></i> <?php if(isset($_SESSION['user_name'])) { echo $_SESSION['user_name'];}?>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right rounded-0 m-0">
                                         <a href="<?php echo $base; ?>pages/profile.php" class="dropdown-item">My Profile</a>
                                         <a href="<?php echo $base; ?>pages/orders.php" class="dropdown-item">My Orders</a>
                                         <div class="dropdown-divider"></div>
-                                        <a href="<?php echo $base; ?>logout.php" class="dropdown-item text-danger">Logout</a>
+                                        <a href="<?php echo $base; ?>api/auth/logout.php" class="dropdown-item text-danger">Logout</a>
                                     </div>
                                 </div>
                             <?php else: ?>
