@@ -353,15 +353,13 @@
                 </div>
             </div> -->
 
-            <div class="container-fluid pt-5">
-    <div class="row px-xl-5">
-        <div class="col-lg-3 col-md-12">
-            </div>
+            <div class="col-lg-9 col-md-12">
 
-        <div class="col-lg-9 col-md-12">
+ 
+
             <div class="row pb-3" id="dynamic-products">
-                </div>
-        </div>
+
+
     </div>
 </div>
             <!-- Shop Product End -->

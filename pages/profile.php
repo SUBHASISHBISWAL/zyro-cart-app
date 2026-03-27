@@ -42,7 +42,7 @@ $user_data = $result->fetch_assoc();
                         <h1 class="text-white m-0"><?php echo strtoupper(substr($user_data['name'], 0, 1)); ?></h1>
                     </div>
                     <h5 class="font-weight-bold"><?php echo htmlspecialchars($user_data['name']); ?></h5>
-                    <p class="text-muted small mb-0">Member since <?php echo date('M Y', strtotime($user_data['created_at'])); ?></p>
+                    <p class="text-muted small mb-0">Member since <?php echo date('d M Y', strtotime($user_data['created_at'])); ?></p>
                 </div>
                 <div class="list-group list-group-flush border-top">
                     <a href="profile.php" class="list-group-item list-group-item-action active bg-primary text-white border-0 py-3">
