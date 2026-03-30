@@ -9623,3 +9623,18 @@ a.text-dark:hover, a.text-dark:focus {
 .category-card:hover {
     transform: translateY(-5px);
 }
+
+
+
+
+
+/* align produts */
+.col-lg-9 {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+#dynamic-products {
+    width: 100%;
+}

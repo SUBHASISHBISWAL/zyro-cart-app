@@ -1,28 +1,57 @@
-
 <?php
 session_start();
- include '../config/db.php';
-$email = $_POST['email'];
-$password = $_POST['password'];
-$sql = "SELECT * FROM users WHERE email='$email'";
-$result = $conn->query($sql);
+include '../config/db.php';
 
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    // Verify password
-    if (password_verify($password, $user['password'])) {
+    // Clean input
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
 
-       $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
-        $_SESSION['user_email'] = $user['email'];
-       header("Location: ../../index.php");
-    } else {
-        $_SESSION['message'] = "Wrong Password";
-          header("Location: ../../pages/login.php");
+    // Check empty
+    if (empty($email) || empty($password)) {
+        $_SESSION['type'] = "error";
+        $_SESSION['message'] = "All fields are required ❌";
+        header("Location: ../../pages/login.php");
+        exit();
     }
-} else {
-    $_SESSION['message'] = "User not found";
-          header("Location: ../../pages/login.php");
+
+    // Prepared statement (secure)
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+
+        $user = $result->fetch_assoc();
+
+        // Verify password
+        if (password_verify($password, $user['password'])) {
+
+            // Store session
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['user_email'] = $user['email'];
+
+            $_SESSION['type'] = "success";
+            $_SESSION['message'] = "Login successful ✅";
+
+            header("Location: ../../index.php");
+            exit();
+
+        } else {
+            $_SESSION['type'] = "error";
+            $_SESSION['message'] = "Wrong Password ❌";
+            header("Location: ../../pages/login.php");
+            exit();
+        }
+
+    } else {
+        $_SESSION['type'] = "error";
+        $_SESSION['message'] = "User not found ❌";
+        header("Location: ../../pages/login.php");
+        exit();
+    }
 }
 ?>

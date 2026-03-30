@@ -238,5 +238,42 @@ form{
 
 
 
+/* pop sms */
+
+#toast {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    left: auto !important;
+    bottom: auto !important;
+
+    display: block !important;
+    width: auto !important;
+
+    background: #dc3545;
+    color: #fff;
+
+    padding: 12px 20px;
+    border-radius: 6px;
+
+    z-index: 999999 !important;
+
+    transform: none !important;
+}
+
+/* success */
+#toast.success {
+    background: #28a745 !important;
+}
+
+/* error */
+#toast.error {
+    background: #dc3545 !important;
+}
 
 
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
