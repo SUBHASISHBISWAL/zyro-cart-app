@@ -155,6 +155,7 @@ $base = isset($base) ? $base : '';
                                     <div class="dropdown-menu dropdown-menu-right rounded-0 m-0">
                                         <a href="<?php echo $base; ?>pages/profile.php" class="dropdown-item">My Profile</a>
                                         <a href="<?php echo $base; ?>pages/orders.php" class="dropdown-item">My Orders</a>
+                                        <a href="<?php echo $base; ?>pages/wishlist.php" class="dropdown-item">My Wishlist</a>
                                         <div class="dropdown-divider"></div>
                                         <a href="<?php echo $base; ?>api/auth/logout.php" class="dropdown-item text-danger">Logout</a>
                                     </div>
