@@ -12,7 +12,7 @@ if (isset($_SESSION['user_id'])) {
         // Destroy session and redirect to Home
         session_unset();
         session_destroy();
-        header("Location: ../../index.php");
+        header("Location: ../../index.php?deleted=success");
         exit();
     } else {
         echo "Error deleting record: " . $conn->error;

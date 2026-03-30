@@ -30,7 +30,7 @@ $user_data = $result->fetch_assoc();
 <div class="container-fluid pt-5">
     <div class="row px-xl-5">
 
-        <div class="col-lg-3 col-md-4 mb-5">
+        <div class="col-lg-3 col-md-4 mb-5" style="box-shadow: -5px 0px 8px 0px #4100ffbd !important; border-radius: 15px !important; height: 505px !important;">
             <div class="card border-0 shadow-sm order_card1">
                 <div class="card-body text-center p-4">
                     <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px; overflow: hidden;">
@@ -58,7 +58,7 @@ $user_data = $result->fetch_assoc();
                 </div>
             </div>
         </div>
-        <div class="col-lg-9 col-md-8">
+        <div class="col-lg-9 col-md-8" style="box-shadow: 5px 0px 8px 0px #4100ffbd !important; border-radius: 15px !important; height: 505px !important;">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white border-0 p-4">
                     <h4 class="font-weight-semi-bold m-0">My Favorites</h4>
@@ -73,4 +73,22 @@ $user_data = $result->fetch_assoc();
         </div>
     </div>
 </div>
+<script>
+function confirmDelete() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Your account and all data will be permanently deleted!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33', // Red color for delete
+        cancelButtonColor: '#3085d6', // Blue color for cancel
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Agar user Yes par click karega toh ye file call hogi
+            window.location.href = "../api/auth/delete_account.php";
+        }
+    })
+}
+</script>
 <?php include '../layouts/footer.php'; ?>
