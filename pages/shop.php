@@ -418,7 +418,15 @@ $(document).ready(function() {
                 let html = '';
 
                 response.forEach(product => {
-                    let img = product.image_url ? product.image_url : '../assets/img/default.jpg';
+                    let images = [];
+                    try {
+
+                        images = JSON.parse(product.image_url);
+                        } catch(e) {
+                        images = [];
+                    }
+                let img = (images.length > 0) ? images[0] : '../assets/img/default.jpg';
+
 
                     html += `
                     <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
