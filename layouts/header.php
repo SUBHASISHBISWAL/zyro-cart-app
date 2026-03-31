@@ -1,9 +1,7 @@
 <?php
-// Ye line check karegi ki session start hai ya nahi
-
-session_start();
-
-
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 $base = isset($base) ? $base : '';
 ?>
 <!DOCTYPE html>
