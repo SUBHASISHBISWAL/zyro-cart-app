@@ -1,7 +1,16 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "zyrocart");
+$host = "localhost";
+$user = "root";
+$pass = "";
+$db   = "zyrocart";
 
+$conn = new mysqli($host, $user, $pass, $db);
+
+// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Database Connection Failed: " . $conn->connect_error);
 }
+
+// Optional (important for special characters)
+$conn->set_charset("utf8mb4");
 ?>
