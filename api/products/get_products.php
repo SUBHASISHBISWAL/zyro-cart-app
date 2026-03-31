@@ -22,7 +22,7 @@ if ($cat != '') {
 
 } else {
     // No filter
-    $result = mysqli_query($conn, "SELECT * FROM shop_products");
+    $result = mysqli_query($conn, "SELECT * FROM shop_products limit 0,9");
 }
 
 // 3. Fetch data

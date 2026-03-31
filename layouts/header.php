@@ -31,11 +31,11 @@ $base = isset($base) ? $base : '';
         <div class="row bg-secondary py-2 px-xl-5">
             <div class="col-lg-6 d-none d-lg-block">
                 <div class="d-inline-flex align-items-center">
-                   <a class="text-dark" href="<?php echo $base; ?>pages/faqs.php">FAQs</a>
-                   <span class="text-muted px-2">|</span>
-                   <a class="text-dark" href="<?php echo $base; ?>pages/help.php">Help</a>
-                   <span class="text-muted px-2">|</span>
-                   <a class="text-dark" href="<?php echo $base; ?>pages/support.php">Support</a>
+                    <a class="text-dark" href="<?php echo $base; ?>pages/faqs.php">FAQs</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="<?php echo $base; ?>pages/help.php">Help</a>
+                    <span class="text-muted px-2">|</span>
+                    <a class="text-dark" href="<?php echo $base; ?>pages/support.php">Support</a>
                 </div>
             </div>
             <div class="col-lg-6 text-center text-lg-right">
@@ -60,7 +60,7 @@ $base = isset($base) ? $base : '';
         </div>
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
-               <div class="col-md-3">
+                <div class="col-md-3">
                     <h3 class="fw-bold">
                         <span class="text-primary">●</span>.ZyroCart
                     </h3>
@@ -130,7 +130,7 @@ $base = isset($base) ? $base : '';
                     </button>
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
-                    <?php $current_page = basename($_SERVER['SCRIPT_NAME']); ?>
+                            <?php $current_page = basename($_SERVER['SCRIPT_NAME']); ?>
                             <a href="<?php echo $base; ?>index.php" class="nav-item nav-link <?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Home</a>
                             <a href="<?php echo $base; ?>pages/shop.php" class="nav-item nav-link <?php echo ($current_page == 'shop.php') ? 'active' : ''; ?>">Shop</a>
                             <a href="<?php echo $base; ?>pages/detail.php" class="nav-item nav-link <?php echo ($current_page == 'detail.php') ? 'active' : ''; ?>">Shop Detail</a>
@@ -145,10 +145,12 @@ $base = isset($base) ? $base : '';
                         </div>
 
                         <div class="navbar-nav ml-auto py-0">
-                            <?php if(isset($_SESSION['user_id'])): ?>
+                            <?php if (isset($_SESSION['user_id'])): ?>
                                 <div class="nav-item dropdown">
                                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="padding-top: 20px;">
-                                        <i class="fas fa-user-circle fa-lg text-primary"></i> <?php if(isset($_SESSION['user_name'])) { echo $_SESSION['user_name'];}?>
+                                        <i class="fas fa-user-circle fa-lg text-primary"></i> <?php if (isset($_SESSION['user_name'])) {
+                                                                                                    echo $_SESSION['user_name'];
+                                                                                                } ?>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right rounded-0 m-0">
                                         <a href="<?php echo $base; ?>pages/profile.php" class="dropdown-item">My Profile</a>
@@ -163,7 +165,7 @@ $base = isset($base) ? $base : '';
                                 <a href="<?php echo $base; ?>pages/login.php?tab=signup" class="nav-item nav-link">Register</a>
                             <?php endif; ?>
                         </div>
-                        </div>
+                    </div>
                 </nav>
             </div>
         </div>

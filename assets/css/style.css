@@ -10801,7 +10801,7 @@ a.text-dark:focus {
 }
 
 .category-card:hover {
-<<<<<<< HEAD
+
     transform: translateY(-5px);
 }
 
@@ -10819,10 +10819,9 @@ a.text-dark:focus {
 #dynamic-products {
     width: 100%;
 }
-=======
-  transform: translateY(-5px);
+.card .card-header img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
 }
-
->>>>>>> 40019552babe8a4f8db937bf113745605ed821ce
-
-.
