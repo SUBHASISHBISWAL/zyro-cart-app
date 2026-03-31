@@ -30,7 +30,7 @@ $user_data = $result->fetch_assoc();
 <div class="container-fluid pt-5">
     <div class="row px-xl-5">
 
-        <div class="col-lg-3 col-md-4 mb-5" style="box-shadow: -5px 0px 8px 0px #4100ffbd !important; border-radius: 15px !important; height: 505px !important;">
+        <div class="col-lg-3 col-md-4 mb-5" style="box-shadow: -5px 0px 8px 0px #4100ffbd !important; border-radius: 15px !important; height: 570px !important;">
             <div class="card border-0 shadow-sm order_card1">
                 <div class="card-body text-center p-4">
                     <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 100px; height: 100px; overflow: hidden;">
@@ -52,13 +52,19 @@ $user_data = $result->fetch_assoc();
                     <a href="wishlist.php" class="list-group-item list-group-item-action active bg-primary text-white border-0 py-3">
                         <i class="fas fa-heart text-white mr-3"></i>My Wishlist
                     </a>
+                    <a href="addresses.php" class="list-group-item list-group-item-action py-3">
+                        <i class="fas fa-map-marker-alt text-primary mr-3"></i>Manage Addresses
+                    </a>
                     <a href="../api/auth/logout.php" class="list-group-item list-group-item-action text-danger py-3">
                         <i class="fas fa-sign-out-alt mr-3"></i>Logout
+                    </a>
+                    <a href="#" onclick="confirmDelete()" class="list-group-item list-group-item-action text-muted small py-2 mt-4 border-top">
+                        <i class="fas fa-trash-alt mr-2"></i>Delete My Account
                     </a>
                 </div>
             </div>
         </div>
-        <div class="col-lg-9 col-md-8" style="box-shadow: 5px 0px 8px 0px #4100ffbd !important; border-radius: 15px !important; height: 505px !important;">
+        <div class="col-lg-9 col-md-8" style="box-shadow: 5px 0px 8px 0px #4100ffbd !important; border-radius: 15px !important; height: 570px !important;">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white border-0 p-4">
                     <h4 class="font-weight-semi-bold m-0">My Favorites</h4>

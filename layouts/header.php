@@ -147,10 +147,39 @@ $base = isset($base) ? $base : '';
                         <div class="navbar-nav ml-auto py-0">
                             <?php if (isset($_SESSION['user_id'])): ?>
                                 <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" style="padding-top: 20px;">
-                                        <i class="fas fa-user-circle fa-lg text-primary"></i> <?php if (isset($_SESSION['user_name'])) {
-                                                                                                    echo $_SESSION['user_name'];
-                                                                                                } ?>
+                                    <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-toggle="dropdown" style="padding-top: 12px; padding-bottom: 12px;">
+                                        <?php
+                                            $header_img = "";
+
+                                            // SMART FIX: DB Connection Check
+                                            if(!isset($conn)) {
+                                                // Check if we are in root or pages folder
+                                                $db_path = file_exists('api/config/db.php') ? 'api/config/db.php' : '../api/config/db.php';
+                                                if(file_exists($db_path)) {
+                                                    include_once $db_path;
+                                                }
+                                            }
+
+                                            // Fetch Image
+                                            if(isset($conn) && $conn) {
+                                                $h_id = $_SESSION['user_id'];
+                                                $h_query = mysqli_query($conn, "SELECT profile_image FROM users WHERE id='$h_id'");
+                                                if($h_query && mysqli_num_rows($h_query) > 0) {
+                                                    $h_data = mysqli_fetch_assoc($h_query);
+                                                    $header_img = $h_data['profile_image'];
+                                                }
+                                            }
+                                        ?>
+
+                                        <?php if(!empty($header_img)): ?>
+                                            <img src="<?php echo $base; ?>assets/img/users/<?php echo $header_img; ?>" alt="User" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #D19C97;">
+                                        <?php else: ?>
+                                            <i class="fas fa-user-circle fa-2x text-primary" style="margin-right: 8px;"></i>
+                                        <?php endif; ?>
+
+                                        <span style="font-size: 16px; font-weight: 600;">
+                                            <?php if(isset($_SESSION['user_name'])) { echo $_SESSION['user_name'];}?>
+                                        </span>
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right rounded-0 m-0">
                                         <a href="<?php echo $base; ?>pages/profile.php" class="dropdown-item">My Profile</a>
