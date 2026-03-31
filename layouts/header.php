@@ -133,7 +133,7 @@ $base = isset($base) ? $base : '';
                             <?php $current_page = basename($_SERVER['SCRIPT_NAME']); ?>
                             <a href="<?php echo $base; ?>index.php" class="nav-item nav-link <?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">Home</a>
                             <a href="<?php echo $base; ?>pages/shop.php" class="nav-item nav-link <?php echo ($current_page == 'shop.php') ? 'active' : ''; ?>">Shop</a>
-                            <a href="<?php echo $base; ?>pages/detail.php" class="nav-item nav-link <?php echo ($current_page == 'detail.php') ? 'active' : ''; ?>">Shop Detail</a>
+
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages</a>
                                 <div class="dropdown-menu rounded-0 m-0">
