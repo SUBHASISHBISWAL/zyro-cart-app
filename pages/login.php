@@ -27,7 +27,9 @@
 <?php endif; ?>
 
 <!-- NOW container -->
-<div class="container">
+
+<!-- added condition for signup and signin tab active functionality  -->
+<div class="container <?php if(isset($_GET['tab'])) { echo  $_GET['tab']=='signup' ? 'active':''; } ?>">
 
     <!-- LOGIN -->
     <div class="form-box login">
