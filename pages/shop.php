@@ -141,88 +141,103 @@ include '../layouts/header.php'; ?>
                         <!-- AJAX products -->
                     </div>
                 </div>
-    
+
     </div>
 </div>
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
 
-                <script>
-                    $(document).ready(function() {
+        function getFilters(className) {
+            let values = [];
+            $(className + ':checked').each(function() {
+                values.push($(this).val());
+            });
+            return values;
+        }
 
-                        function getFilters(className) {
-                            let values = [];
-                            $(className + ':checked').each(function() {
-                                values.push($(this).val());
-                            });
-                            return values;
+        function loadShopProducts() {
+            let colors = getFilters('.filter-color');
+            let sizes = getFilters('.filter-size');
+            let prices = getFilters('.filter-price');
+
+            $.ajax({
+                url: '../api/products/get_products.php',
+                type: 'GET',
+                data: { color: colors, size: sizes, price: prices },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.length === 0) {
+                        $('#dynamic-products').html('<div class="col-12 text-center">No products found.</div>');
+                        return;
+                    }
+
+                    let html = '';
+                    response.forEach(product => {
+                        let images = [];
+                        try {
+                            images = JSON.parse(product.image_url);
+                        } catch (e) {
+                            images = [];
                         }
+                        let img = (images.length > 0) ? images[0] : '../assets/img/default.jpg';
 
-                        function loadShopProducts() {
-
-                            let colors = getFilters('.filter-color');
-                            let sizes = getFilters('.filter-size');
-                            let prices = getFilters('.filter-price');
-
-                            $.ajax({
-                                url: '../api/products/get_products.php',
-                                type: 'GET',
-                                data: {
-                                    color: colors,
-                                    size: sizes,
-                                    price: prices
-                                },
-                                dataType: 'json',
-                                success: function(response) {
-
-                                    if (response.length === 0) {
-                                        $('#dynamic-products').html('<div class="col-12 text-center">No products found.</div>');
-                                        return;
-                                    }
-
-                                    let html = '';
-
-                                    response.forEach(product => {
-                                        let images = [];
-                                        try {
-
-                                            images = JSON.parse(product.image_url);
-                                        } catch (e) {
-                                            images = [];
-                                        }
-                                        let img = (images.length > 0) ? images[0] : '../assets/img/default.jpg';
-
-
-                                        html += ` <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
-                                        <div class="card product-item border-0 mb-4">
-                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                        <img class="img-fluid w-100" src="${img}" alt="">
-                    </div>
-                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                        <h6 class="text-truncate mb-3">${product.name}</h6>
-                        <div class="d-flex justify-content-center">
-                            <h6>$${product.price}</h6><h6 class="text-muted ml-2"><del>$${product.old_price}</del></h6>
-                        </div>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between bg-light border">
-                        <a href="<?php echo $base; ?>pages/detail.php?id=${product.id}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
-                    </div>
-                </div></div>
-                    `;
-                                    });
-
-                                    $('#dynamic-products').html(html);
-                                }
-                            });
-                        }
-
-                        // 🔥 Trigger filter change
-                        $(document).on('change', '.filter-color, .filter-size, .filter-price', function() {
-                            loadShopProducts();
-                        });
-
-                        loadShopProducts();
+                        // YAHAN ADD TO CART BUTTON KO NAYA CLASS AUR DATA-ID DIYA HAI
+                        html += `
+                        <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                            <div class="card product-item border-0 mb-4">
+                                <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                    <img class="img-fluid w-100" src="${img}" alt="">
+                                </div>
+                                <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                    <h6 class="text-truncate mb-3">${product.name}</h6>
+                                    <div class="d-flex justify-content-center">
+                                        <h6>$${product.price}</h6><h6 class="text-muted ml-2"><del>$${product.old_price}</del></h6>
+                                    </div>
+                                </div>
+                                <div class="card-footer d-flex justify-content-between bg-light border">
+                                    <a href="<?php echo $base; ?>pages/detail.php?id=${product.id}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+                                    <a href="#" class="btn btn-sm text-dark p-0 add-to-cart-shop-btn" data-id="${product.id}"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
+                                </div>
+                            </div>
+                        </div>`;
                     });
-                </script>
 
+                    $('#dynamic-products').html(html);
+                }
+            });
+        }
+
+        $(document).on('change', '.filter-color, .filter-size, .filter-price', function() {
+            loadShopProducts();
+        });
+
+        loadShopProducts();
+
+        // NAYA MAGIC: Shop page se direct Add To Cart karne ka function
+        $(document).on('click', '.add-to-cart-shop-btn', function(e) {
+            e.preventDefault();
+            let p_id = $(this).data('id');
+
+            $.ajax({
+                url: '../api/cart/add_to_cart.php',
+                type: 'POST',
+                data: { product_id: p_id, qty: 1, size: '', color: '' }, // Default values from shop
+                dataType: 'json',
+                success: function(res) {
+                    if(res.status === 'success') {
+                        $('#cart-badge').text(res.cart_count); // Badge live update
+                        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: res.message, showConfirmButton: false, timer: 3000, timerProgressBar: true });
+                    } else {
+                        Swal.fire({ icon: 'warning', title: 'Wait!', text: res.message, confirmButtonText: 'Go to Login' }).then((result) => {
+                            if(result.isConfirmed){ window.location.href = 'login.php'; }
+                        });
+                    }
+                }
+            });
+        });
+
+    });
+</script>
                 <?php include '../layouts/footer.php' ?>
