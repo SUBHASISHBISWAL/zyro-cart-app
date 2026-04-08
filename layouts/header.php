@@ -15,14 +15,10 @@ $base = isset($base) ? $base : '';
     <meta content="Free HTML Templates" name="description">
 
     <link href="<?php echo $base; ?>assets/img/favicon.ico" rel="icon">
-
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-
     <link href="<?php echo $base; ?>assets/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
     <link href="<?php echo $base; ?>assets/css/style.css" rel="stylesheet">
 </head>
 
@@ -40,41 +36,26 @@ $base = isset($base) ? $base : '';
             </div>
             <div class="col-lg-6 text-center text-lg-right">
                 <div class="d-inline-flex align-items-center">
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-linkedin-in"></i>
-                    </a>
-                    <a class="text-dark px-2" href="">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a class="text-dark pl-2" href="">
-                        <i class="fab fa-youtube"></i>
-                    </a>
+                    <a class="text-dark px-2" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="text-dark px-2" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="text-dark px-2" href=""><i class="fab fa-linkedin-in"></i></a>
+                    <a class="text-dark px-2" href=""><i class="fab fa-instagram"></i></a>
+                    <a class="text-dark pl-2" href=""><i class="fab fa-youtube"></i></a>
                 </div>
             </div>
         </div>
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <div class="col-md-3">
-                    <h3 class="fw-bold">
-                        <span class="text-primary">●</span>.ZyroCart
-                    </h3>
+                    <h3 class="fw-bold"><span class="text-primary">●</span>.ZyroCart</h3>
                 </div>
-
             </div>
             <div class="col-lg-6 col-6 text-left">
                 <form action="">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search for products">
                         <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
+                            <span class="input-group-text bg-transparent text-primary"><i class="fa fa-search"></i></span>
                         </div>
                     </div>
                 </form>
@@ -84,9 +65,25 @@ $base = isset($base) ? $base : '';
                     <i class="fas fa-heart text-primary"></i>
                     <span class="badge">0</span>
                 </a>
-                <a href="" class="btn border">
+
+                <?php
+                    $cart_count = 0;
+                    if(!isset($conn)) {
+                        $db_path = file_exists('api/config/db.php') ? 'api/config/db.php' : '../api/config/db.php';
+                        if(file_exists($db_path)) include_once $db_path;
+                    }
+                    if(isset($_SESSION['user_id']) && isset($conn)){
+                        $uid = $_SESSION['user_id'];
+                        $cart_q = mysqli_query($conn, "SELECT SUM(quantity) as total FROM cart WHERE user_id='$uid'");
+                        if($cart_q) {
+                            $cart_res = mysqli_fetch_assoc($cart_q);
+                            $cart_count = $cart_res['total'] ? $cart_res['total'] : 0;
+                        }
+                    }
+                ?>
+                <a href="<?php echo $base; ?>pages/cart.php" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
-                    <span class="badge">0</span>
+                    <span class="badge" id="cart-badge"><?php echo $cart_count; ?></span>
                 </a>
             </div>
         </div>
@@ -150,17 +147,6 @@ $base = isset($base) ? $base : '';
                                     <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-toggle="dropdown" style="padding-top: 12px; padding-bottom: 12px;">
                                         <?php
                                             $header_img = "";
-
-                                            // SMART FIX: DB Connection Check
-                                            if(!isset($conn)) {
-                                                // Check if we are in root or pages folder
-                                                $db_path = file_exists('api/config/db.php') ? 'api/config/db.php' : '../api/config/db.php';
-                                                if(file_exists($db_path)) {
-                                                    include_once $db_path;
-                                                }
-                                            }
-
-                                            // Fetch Image
                                             if(isset($conn) && $conn) {
                                                 $h_id = $_SESSION['user_id'];
                                                 $h_query = mysqli_query($conn, "SELECT profile_image FROM users WHERE id='$h_id'");
@@ -170,13 +156,11 @@ $base = isset($base) ? $base : '';
                                                 }
                                             }
                                         ?>
-
                                         <?php if(!empty($header_img)): ?>
                                             <img src="<?php echo $base; ?>assets/img/users/<?php echo $header_img; ?>" alt="User" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 8px; border: 2px solid #D19C97;">
                                         <?php else: ?>
                                             <i class="fas fa-user-circle fa-2x text-primary" style="margin-right: 8px;"></i>
                                         <?php endif; ?>
-
                                         <span style="font-size: 16px; font-weight: 600;">
                                             <?php if(isset($_SESSION['user_name'])) { echo $_SESSION['user_name'];}?>
                                         </span>
