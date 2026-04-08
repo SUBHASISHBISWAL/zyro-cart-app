@@ -93,7 +93,7 @@ $user_data = $result->fetch_assoc();
                         <?php endif; ?>
                     </div>
                     <h5 class="font-weight-bold mb-1" style="font-size: 20px;"><?php echo htmlspecialchars($user_data['name']); ?></h5>
-                    <p class="text-muted small mb-0"><i class="fas fa-calendar-alt mr-1"></i> Joined <?php echo date('M Y', strtotime($user_data['created_at'])); ?></p>
+                    <p class="text-muted small mb-0"><i class="fas fa-calendar-alt mr-1"></i> Joined <?php echo date('d M Y', strtotime($user_data['created_at'])); ?></p>
                 </div>
                 <div class="list-group list-group-flush px-3 pb-4 border-0">
                     <a href="profile.php" class="list-group-item list-group-item-action sidebar-link border-0 py-3">
