@@ -5,7 +5,7 @@ header('Content-Type: application/json');
 
 $inputKeyword = isset($_GET['inputKeyword']) ? $_GET['inputKeyword'] : '';
 
- $result = mysqli_query($conn,"SELECT * FROM shop_products WHERE name LIKE '%$inputKeyword%'");
+ $result = mysqli_query($conn,"SELECT * FROM shop_products WHERE name LIKE '%$inputKeyword%' limit 0,10");
 
 
     // 3. Fetch data
