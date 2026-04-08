@@ -183,36 +183,12 @@ $addresses = $conn->query($addr_query);
 <script>
 // Address Delete ka Popup
 function confirmDeleteAddress(addressId) {
-    Swal.fire({
-        title: 'Delete Address?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = "../api/auth/delete_address.php?id=" + addressId;
-        }
-    })
+showDailog('Delete Address?',"You won't be able to revert this!", "../api/auth/delete_address.php?id=" + addressId);
 }
 
 // Account Delete ka Popup (Fix)
 function confirmDelete() {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "Your account and all data will be permanently deleted!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = "../api/auth/delete_account.php";
-        }
-    })
+    showDailog('Are you sure?',"Your account and all data will be permanently deleted!","../api/auth/delete_account.php");
 }
 
 // Success Popup

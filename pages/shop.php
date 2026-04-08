@@ -1,6 +1,18 @@
 <?php $base = '../';
 include '../layouts/header.php'; ?>
+<?php
+include '../api/config/db.php';
 
+// User ke saare saved addresses nikalne ka logic
+$price_query = "SELECT * FROM price_ranges ORDER BY id ASC";
+$price_ranges = $conn->query($price_query);
+
+$total_pr_query = "SELECT count(*) as total_product FROM `shop_products`";
+$total_products_res = $conn->query($total_pr_query);
+$total_prod = $total_products_res->fetch_assoc();
+
+//SELECT count(*) as total_product FROM `shop_products` where price BETWEEN 500 AND 1000
+?>
 <div class="position-relative">
 
     <div class="position-absolute w-100 text-center" style="top: 20px; z-index: 10;">
@@ -29,33 +41,36 @@ include '../layouts/header.php'; ?>
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input" checked id="price-all">
                         <label class="custom-control-label" for="price-all">All Price</label>
-                        <span class="badge border font-weight-normal">1000</span>
+                        <span class="badge border font-weight-normal"><?php echo $total_prod['total_product']; ?></span>
                     </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="price-1">
-                        <label class="custom-control-label" for="price-1">$0 - $100</label>
-                        <span class="badge border font-weight-normal">150</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="price-2">
-                        <label class="custom-control-label" for="price-2">$100 - $200</label>
-                        <span class="badge border font-weight-normal">295</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="price-3">
-                        <label class="custom-control-label" for="price-3">$200 - $300</label>
-                        <span class="badge border font-weight-normal">246</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="price-4">
-                        <label class="custom-control-label" for="price-4">$300 - $400</label>
-                        <span class="badge border font-weight-normal">145</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" id="price-5">
-                        <label class="custom-control-label" for="price-5">$400 - $500</label>
-                        <span class="badge border font-weight-normal">168</span>
-                    </div>
+                    <?php if ($price_ranges->num_rows > 0): ?>
+                        <?php while ($price_range = $price_ranges->fetch_assoc()): ?>
+
+                            <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                                <input type="checkbox" class="custom-control-input filter-price" data-min-price="<?php echo $price_range['min_price']; ?>" data-max-price="<?php echo $price_range['max_price']; ?>" value="<?php echo $price_range['id']; ?>" id="<?php echo $price_range['id']; ?>">
+                                <label class="custom-control-label" for="<?php echo $price_range['id']; ?>"> <?php echo $price_range['label']; ?></label>
+                                <span class="badge border font-weight-normal">
+
+                                    <?php
+                                    $start_price = $price_range['min_price'];
+                                    $end_price = $price_range['max_price'];
+                                    $range_wise_pr_query = "SELECT count(*) as range_wise_product_count FROM `shop_products` where price BETWEEN " . $start_price . " AND " . $end_price . "";
+                                    $range_products_res = $conn->query($range_wise_pr_query);
+                                    $price_range_wise_prod = $range_products_res->fetch_assoc();
+                                    echo $price_range_wise_prod['range_wise_product_count'];
+                                    ?>
+
+
+                                </span>
+                            </div>
+                        <?php endwhile; ?>
+
+                    <?php else: ?>
+                        <div class="col-12 text-center py-5">
+
+                            <p class="text-muted small">No price range</p>
+                        </div>
+                    <?php endif; ?>
                 </form>
             </div>
             <!-- Price End -->
@@ -136,63 +151,62 @@ include '../layouts/header.php'; ?>
             </div>
             <!-- Size End -->
         </div>
-  <div class="col-lg-9 col-md-12">
-                    <div class="row" id="dynamic-products">
-                        <!-- AJAX products -->
-                    </div>
-                </div>
-    
+        <div class="col-lg-9 col-md-12">
+            <div class="row" id="dynamic-products">
+                <!-- AJAX products -->
+            </div>
+        </div>
+
     </div>
 </div>
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                <script>
-                    $(document).ready(function() {
+<script>
+    $(document).ready(function() {
 
-                        function getFilters(className) {
-                            let values = [];
-                            $(className + ':checked').each(function() {
-                                values.push($(this).val());
-                            });
-                            return values;
+        function getFilters(className) {
+            let values = [];
+            $(className + ':checked').each(function() {
+                values.push($(this).val());
+            });
+            return values;
+        }
+
+        function loadShopProducts() {
+
+            let colors = getFilters('.filter-color');
+            let sizes = getFilters('.filter-size');
+            let prices = getFilters('.filter-price');
+            $.ajax({
+                url: '../api/products/get_products.php',
+                type: 'GET',
+                data: {
+                    color: colors,
+                    size: sizes,
+                    price: prices
+                },
+                dataType: 'json',
+                success: function(response) {
+
+                    if (response.length === 0) {
+                        $('#dynamic-products').html('<div class="col-12 text-center">No products found.</div>');
+                        return;
+                    }
+
+                    let html = '';
+
+                    response.forEach(product => {
+                        let images = [];
+                        try {
+
+                            images = JSON.parse(product.image_url);
+                        } catch (e) {
+                            images = [];
                         }
-
-                        function loadShopProducts() {
-
-                            let colors = getFilters('.filter-color');
-                            let sizes = getFilters('.filter-size');
-                            let prices = getFilters('.filter-price');
-
-                            $.ajax({
-                                url: '../api/products/get_products.php',
-                                type: 'GET',
-                                data: {
-                                    color: colors,
-                                    size: sizes,
-                                    price: prices
-                                },
-                                dataType: 'json',
-                                success: function(response) {
-
-                                    if (response.length === 0) {
-                                        $('#dynamic-products').html('<div class="col-12 text-center">No products found.</div>');
-                                        return;
-                                    }
-
-                                    let html = '';
-
-                                    response.forEach(product => {
-                                        let images = [];
-                                        try {
-
-                                            images = JSON.parse(product.image_url);
-                                        } catch (e) {
-                                            images = [];
-                                        }
-                                        let img = (images.length > 0) ? images[0] : '../assets/img/default.jpg';
+                        let img = (images.length > 0) ? images[0] : '../assets/img/default.jpg';
 
 
-                                        html += ` <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                        html += ` <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
                                         <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
                         <img class="img-fluid w-100" src="${img}" alt="">
@@ -209,20 +223,20 @@ include '../layouts/header.php'; ?>
                     </div>
                 </div></div>
                     `;
-                                    });
-
-                                    $('#dynamic-products').html(html);
-                                }
-                            });
-                        }
-
-                        // 🔥 Trigger filter change
-                        $(document).on('change', '.filter-color, .filter-size, .filter-price', function() {
-                            loadShopProducts();
-                        });
-
-                        loadShopProducts();
                     });
-                </script>
 
-                <?php include '../layouts/footer.php' ?>
+                    $('#dynamic-products').html(html);
+                }
+            });
+        }
+
+        // 🔥 Trigger filter change
+        $(document).on('change', '.filter-color, .filter-size, .filter-price', function() {
+            loadShopProducts();
+        });
+
+        loadShopProducts();
+    });
+</script>
+
+<?php include '../layouts/footer.php' ?>
