@@ -80,4 +80,42 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function getFilterProduct(inputKeyword){
+        console.log(inputKeyword,'::::::::::inputKeyword')
+
+        
+            $.ajax({
+                url: '../api/products/filter_products.php',
+                type: 'GET',
+                data: { inputKeyword: inputKeyword},
+                dataType: 'json',
+                success: function(response) {
+                    if (response.length === 0) {
+                        $('#filter-products').html('<li">No products found.</li>');
+                        return;
+                    }
+
+                    let html = '';
+                    response.forEach(product => {
+                        let images = [];
+                        try {
+                            images = JSON.parse(product.image_url);
+                        } catch (e) {
+                            images = [];
+                        }
+                        let img = (images.length > 0) ? images[0] : '../assets/img/default.jpg';
+
+                        // YAHAN ADD TO CART BUTTON KO NAYA CLASS AUR DATA-ID DIYA HAI
+                        html += `
+                         <li><a href="<?php echo $base; ?>pages/detail.php?id=${product.id}"><span><img src="${img}"></span><span class="search-text">${product.name}</span></a></li>
+                      `;
+                    });
+
+                    $('#filter-products').html(html);
+                }
+            });
+
+    }
+    </script>
 </body>

@@ -10825,3 +10825,22 @@ a.text-dark:focus {
     object-fit: cover;
     display: block;
 }
+.seach-product-ul {
+    position: absolute;
+    z-index: 1111;
+    background: #ffffff;
+    width: 95%;
+}
+ul.seach-product-ul li img {
+    width: 22px;
+    border-radius: 4px;
+}
+span.search-text
+{
+      margin-left: 9px;
+}
+ul.seach-product-ul li
+{
+  padding: 4px;
+    border-bottom: 1px solid #eaeaea;
+}

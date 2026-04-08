@@ -53,12 +53,15 @@ $base = isset($base) ? $base : '';
             <div class="col-lg-6 col-6 text-left">
                 <form action="">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products">
+                        <input type="text" class="form-control" placeholder="Search for products" onkeyup="getFilterProduct(this.value)">
                         <div class="input-group-append">
                             <span class="input-group-text bg-transparent text-primary"><i class="fa fa-search"></i></span>
                         </div>
                     </div>
                 </form>
+                <ul class="list-unstyled seach-product-ul" id="filter-products">
+                   
+                </ul>
             </div>
             <div class="col-lg-3 col-6 text-right">
                 <a href="" class="btn border">
