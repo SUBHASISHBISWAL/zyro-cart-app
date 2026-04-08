@@ -5,6 +5,7 @@ header('Content-Type: application/json');
 
 // 1. Get category
 $cat = isset($_GET['cat']) ? $_GET['cat'] : '';
+$price = isset($_GET['price']) ? $_GET['price'] : '';
 
 if ($cat != '') {
 

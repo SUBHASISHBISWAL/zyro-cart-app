@@ -266,35 +266,11 @@ $addresses = $conn->query($addr_query);
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 function confirmDeleteAddress(addressId) {
-    Swal.fire({
-        title: 'Delete Address?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#f8f9fa',
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: '<span style="color: #333;">Cancel</span>',
-        customClass: { popup: 'premium-card' }
-    }).then((result) => {
-        if (result.isConfirmed) { window.location.href = "../api/auth/delete_address.php?id=" + addressId; }
-    })
+showDailog('Delete Address?',"You won't be able to revert this!", "../api/auth/delete_address.php?id=" + addressId);
 }
 
 function confirmDelete() {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "Your account and all data will be permanently deleted!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#f8f9fa',
-        confirmButtonText: 'Yes, delete it!',
-        cancelButtonText: '<span style="color: #333;">Cancel</span>',
-        customClass: { popup: 'premium-card' }
-    }).then((result) => {
-        if (result.isConfirmed) { window.location.href = "../api/auth/delete_account.php"; }
-    })
+    showDailog('Are you sure?',"Your account and all data will be permanently deleted!","../api/auth/delete_account.php");
 }
 
 document.addEventListener("DOMContentLoaded", function() {
