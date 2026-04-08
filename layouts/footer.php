@@ -83,7 +83,7 @@
 <script>
     function getFilterProduct(inputKeyword){
         console.log(inputKeyword,'::::::::::inputKeyword')
-
+if(inputKeyword.length > 2){
         
             $.ajax({
                 url: '../api/products/filter_products.php',
@@ -115,7 +115,9 @@
                     $('#filter-products').html(html);
                 }
             });
-
+}else{
+     $('#filter-products').html('');
+}
     }
     </script>
 </body>
