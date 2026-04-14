@@ -116,36 +116,31 @@ $total_prod = $total_products_res->fetch_assoc();
             <div class="mb-5">
                 <h5 class="font-weight-semi-bold mb-4">Filter by size</h5>
                 <form>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" checked id="size-all">
-                        <label class="custom-control-label" for="size-all">All Size</label>
-                        <span class="badge border font-weight-normal">1000</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-1">
-                        <label class="custom-control-label" for="size-1">XS</label>
-                        <span class="badge border font-weight-normal">150</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-2">
-                        <label class="custom-control-label" for="size-2">S</label>
-                        <span class="badge border font-weight-normal">295</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-3">
-                        <label class="custom-control-label" for="size-3">M</label>
-                        <span class="badge border font-weight-normal">246</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input" id="size-4">
-                        <label class="custom-control-label" for="size-4">L</label>
-                        <span class="badge border font-weight-normal">145</span>
-                    </div>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between">
-                        <input type="checkbox" class="custom-control-input" id="size-5">
-                        <label class="custom-control-label" for="size-5">XL</label>
-                        <span class="badge border font-weight-normal">168</span>
-                    </div>
+                    
+                      <?php
+        // Fetch all colors from products and split them
+        $sizes_query = "SELECT size_name FROM `sizes` ORDER by id ASC";
+        $sizes_result = $conn->query($sizes_query);
+        
+         if ($sizes_result->num_rows > 0) {
+            while ($row = $sizes_result->fetch_assoc()) { ?>
+                <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                    <input type="checkbox" class="custom-control-input filter-size" 
+                           data-color="<?php echo $row['size_name']; ?>" 
+                           value="<?php echo $row['size_name']; ?>" 
+                           id="color-<?php echo $row['size_name']; ?>">
+                    <label class="custom-control-label" for="color-<?php echo $row['size_name']; ?>">
+                        <?php echo $row['size_name']; ?>
+                    </label>
+                 
+                </div>
+                <?php } ?>
+            <?php }else{ ?>
+            <div class="col-12 text-center py-5">
+                <p class="text-muted small">No size available</p>
+            </div>
+        <?php } ?>
+                 
                 </form>
             </div>
             <!-- Size End -->

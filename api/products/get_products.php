@@ -6,6 +6,8 @@ header('Content-Type: application/json');
 // 1. Get category
 $cat = isset($_GET['cat']) ? $_GET['cat'] : '';
 $price = isset($_GET['price']) ? $_GET['price'] : '';
+$colors = isset($_GET['color']) ? $_GET['color'] : '';
+$size = isset($_GET['size']) ? $_GET['size'] : '';
 if ($price != '') {
 $total_price_array_count = count($price);
 $first_index = $price[0];
@@ -21,7 +23,7 @@ $result2 = mysqli_query($conn, $query2);
 $last_max_price = mysqli_fetch_assoc($result2);
 $filter_by_max_price = $last_max_price['max_price'];
 
- $result = mysqli_query($conn, "SELECT * FROM shop_products where price between '$filter_by_min_price' AND '$filter_by_max_price' limit 0,9");
+ $result = mysqli_query($conn, "SELECT * FROM shop_products where price between '$filter_by_min_price' AND '$filter_by_max_price' limit 0,12");
 }else if ($cat != '') {
 
     // 2. Prepare statement
@@ -38,7 +40,7 @@ $filter_by_max_price = $last_max_price['max_price'];
 
 } else {
     // No filter
-    $result = mysqli_query($conn, "SELECT * FROM shop_products limit 0,9");
+    $result = mysqli_query($conn, "SELECT * FROM shop_products limit 0,12");
 }
 
 // 3. Fetch data
