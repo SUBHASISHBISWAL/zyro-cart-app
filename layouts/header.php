@@ -60,7 +60,7 @@ $base = isset($base) ? $base : '';
                     </div>
                 </form>
                 <ul class="list-unstyled seach-product-ul" id="filter-products">
-                   
+
                 </ul>
             </div>
             <div class="col-lg-3 col-6 text-right">
@@ -71,11 +71,17 @@ $base = isset($base) ? $base : '';
 
                 <?php
                     $cart_count = 0;
+                    $cart_link = $base . "pages/login.php"; // Default link login page rahega (bina login walo ke liye)
+
+                    // Database Connection Check
                     if(!isset($conn)) {
                         $db_path = file_exists('api/config/db.php') ? 'api/config/db.php' : '../api/config/db.php';
                         if(file_exists($db_path)) include_once $db_path;
                     }
+
+                    // CONDITION 1: User Logged In Hai
                     if(isset($_SESSION['user_id']) && isset($conn)){
+                        $cart_link = $base . "pages/cart.php"; // Link change karke asali cart ka kar diya
                         $uid = $_SESSION['user_id'];
                         $cart_q = mysqli_query($conn, "SELECT SUM(quantity) as total FROM cart WHERE user_id='$uid'");
                         if($cart_q) {
@@ -83,8 +89,16 @@ $base = isset($base) ? $base : '';
                             $cart_count = $cart_res['total'] ? $cart_res['total'] : 0;
                         }
                     }
+                    // CONDITION 2: Guest User (Bina login wale)
+                    else {
+                        if (isset($_SESSION['guest_cart'])) {
+                            foreach ($_SESSION['guest_cart'] as $item) {
+                                $cart_count += $item['qty'];
+                            }
+                        }
+                    }
                 ?>
-                <a href="<?php echo $base; ?>pages/cart.php" class="btn border">
+                <a href="<?php echo $cart_link; ?>" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>
                     <span class="badge" id="cart-badge"><?php echo $cart_count; ?></span>
                 </a>

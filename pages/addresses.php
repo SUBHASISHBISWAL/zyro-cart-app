@@ -122,7 +122,7 @@ $addresses = $conn->query($addr_query);
                         <?php endif; ?>
                     </div>
                     <h5 class="font-weight-bold mb-1" style="font-size: 20px;"><?php echo htmlspecialchars($user_data['name']); ?></h5>
-                    <p class="text-muted small mb-0"><i class="fas fa-calendar-alt mr-1"></i> Joined <?php echo date('d M Y', strtotime($user_data['created_at'])); ?></p>
+                    <p class="text-muted small mb-0"><i class="fas fa-calendar-alt mr-1"></i> Joined <?php echo date('M Y', strtotime($user_data['created_at'])); ?></p>
                 </div>
                 <div class="list-group list-group-flush px-3 pb-4 border-0">
                     <a href="profile.php" class="list-group-item list-group-item-action sidebar-link border-0 py-3">
@@ -180,9 +180,25 @@ $addresses = $conn->query($addr_query);
                                                 <?php echo htmlspecialchars($addr['city']); ?>, <?php echo htmlspecialchars($addr['state']); ?> - <span class="font-weight-bold text-dark"><?php echo htmlspecialchars($addr['pincode']); ?></span>
                                             </p>
                                         </div>
-                                        <button onclick="confirmDeleteAddress(<?php echo $addr['id']; ?>)" class="btn btn-sm" style="background: rgba(220, 53, 69, 0.1); color: #dc3545; border-radius: 8px; padding: 8px 15px;">
-                                            <i class="fas fa-trash mr-1"></i> Delete
-                                        </button>
+                                        <div class="d-flex flex-column align-items-end">
+                                            <button class="btn btn-sm btn-edit-address mb-2" style="background: rgba(0, 123, 255, 0.1); color: #007bff; border-radius: 8px; padding: 8px 15px; width: 100%;"
+                                                data-id="<?php echo $addr['id']; ?>"
+                                                data-name="<?php echo htmlspecialchars($addr['name']); ?>"
+                                                data-phone="<?php echo htmlspecialchars($addr['phone']); ?>"
+                                                data-pincode="<?php echo htmlspecialchars($addr['pincode']); ?>"
+                                                data-locality="<?php echo htmlspecialchars($addr['locality']); ?>"
+                                                data-full="<?php echo htmlspecialchars($addr['full_address']); ?>"
+                                                data-city="<?php echo htmlspecialchars($addr['city']); ?>"
+                                                data-state="<?php echo htmlspecialchars($addr['state']); ?>"
+                                                data-type="<?php echo $addr['address_type']; ?>"
+                                                data-toggle="modal" data-target="#editAddressModal">
+                                                <i class="fas fa-edit mr-1"></i> Edit
+                                            </button>
+
+                                            <button onclick="confirmDeleteAddress(<?php echo $addr['id']; ?>)" class="btn btn-sm" style="background: rgba(220, 53, 69, 0.1); color: #dc3545; border-radius: 8px; padding: 8px 15px; width: 100%;">
+                                                <i class="fas fa-trash mr-1"></i> Delete
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -263,14 +279,124 @@ $addresses = $conn->query($addr_query);
   </div>
 </div>
 
+<div class="modal fade" id="editAddressModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content premium-card border-0">
+      <div class="modal-header border-0 pb-0 px-4 pt-4">
+        <h4 class="modal-title font-weight-bold text-dark">Edit Address</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="../api/auth/update_address.php" method="POST">
+        <div class="modal-body p-4">
+            <div class="row">
+                <input type="hidden" name="address_id" id="edit_address_id">
+
+                <div class="col-md-6 form-group mb-3">
+                    <label class="font-weight-bold text-dark mb-2">Full Name</label>
+                    <input type="text" class="form-control custom-input" name="name" id="edit_name" required >
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label class="font-weight-bold text-dark mb-2">Phone Number</label>
+                    <input type="text" class="form-control custom-input" name="phone" id="edit_phone" required >
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label class="font-weight-bold text-dark mb-2">Pincode</label>
+                    <input type="text" class="form-control custom-input" name="pincode" id="edit_pincode" required >
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label class="font-weight-bold text-dark mb-2">Locality / Village</label>
+                    <input type="text" class="form-control custom-input" name="locality" id="edit_locality" required >
+                </div>
+                <div class="col-md-12 form-group mb-3">
+                    <label class="font-weight-bold text-dark mb-2">Full Address</label>
+                    <textarea class="form-control custom-input" name="full_address" id="edit_full_address" rows="3" required></textarea>
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label class="font-weight-bold text-dark mb-2">City / District</label>
+                    <input type="text" class="form-control custom-input" name="city" id="edit_city" required >
+                </div>
+                <div class="col-md-6 form-group mb-3">
+                    <label class="font-weight-bold text-dark mb-2">State</label>
+                    <input type="text" class="form-control custom-input" name="state" id="edit_state" required >
+                </div>
+                <div class="col-md-12 form-group mt-3">
+                    <label class="font-weight-bold text-dark mb-3 d-block">Address Type</label>
+                    <div class="custom-control custom-radio custom-control-inline mr-4">
+                        <input type="radio" id="edit_home" name="address_type" class="custom-control-input" value="Home">
+                        <label class="custom-control-label" for="edit_home">Home (All day delivery)</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" id="edit_work" name="address_type" class="custom-control-input" value="Work">
+                        <label class="custom-control-label" for="edit_work">Work (10 AM - 5 PM)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer border-0 px-4 pb-4 pt-0">
+          <button type="button" class="btn btn-light px-4 py-2" data-dismiss="modal" style="border-radius: 30px;">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-premium ml-2">Update Address</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+// Edit Modal ko Data se Bharne wala JS
+$(document).ready(function() {
+    $('.btn-edit-address').click(function() {
+        $('#edit_address_id').val($(this).data('id'));
+        $('#edit_name').val($(this).data('name'));
+        $('#edit_phone').val($(this).data('phone'));
+        $('#edit_pincode').val($(this).data('pincode'));
+        $('#edit_locality').val($(this).data('locality'));
+        $('#edit_full_address').val($(this).data('full'));
+        $('#edit_city').val($(this).data('city'));
+        $('#edit_state').val($(this).data('state'));
+
+        let type = $(this).data('type');
+        if(type === 'Home') {
+            $('#edit_home').prop('checked', true);
+        } else {
+            $('#edit_work').prop('checked', true);
+        }
+    });
+});
+
 function confirmDeleteAddress(addressId) {
-showDailog('Delete Address?',"You won't be able to revert this!", "../api/auth/delete_address.php?id=" + addressId);
+    Swal.fire({
+        title: 'Delete Address?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#f8f9fa',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: '<span style="color: #333;">Cancel</span>',
+        customClass: { popup: 'premium-card' }
+    }).then((result) => {
+        if (result.isConfirmed) { window.location.href = "../api/auth/delete_address.php?id=" + addressId; }
+    })
 }
 
 function confirmDelete() {
-    showDailog('Are you sure?',"Your account and all data will be permanently deleted!","../api/auth/delete_account.php");
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Your account and all data will be permanently deleted!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#f8f9fa',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: '<span style="color: #333;">Cancel</span>',
+        customClass: { popup: 'premium-card' }
+    }).then((result) => {
+        if (result.isConfirmed) { window.location.href = "../api/auth/delete_account.php"; }
+    })
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -279,10 +405,12 @@ document.addEventListener("DOMContentLoaded", function() {
         let status = urlParams.get('status');
         let msg = '';
         if(status === 'added') msg = 'Address saved successfully!';
+        if(status === 'updated') msg = 'Address updated successfully!';
         if(status === 'deleted') msg = 'Address deleted successfully!';
 
         if(msg !== '') {
             Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: msg, showConfirmButton: false, timer: 3000, timerProgressBar: true });
+            // Clean the URL so refresh doesn't show alert again
             window.history.replaceState(null, null, window.location.pathname);
         }
     }
