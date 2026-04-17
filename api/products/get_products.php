@@ -4,7 +4,7 @@ include '../config/db.php'; // yaha $conn hona chahiye mysqli connection
 header('Content-Type: application/json');
 
 // 1. Get category
-$cat = isset($_GET['cat']) ? $_GET['cat'] : '';
+$cat_id = isset($_GET['cat_id']) ? $_GET['cat_id'] : '';
 $price = isset($_GET['price']) ? $_GET['price'] : '';
 $colors = isset($_GET['color']) ? $_GET['color'] : '';
 $size = isset($_GET['size']) ? $_GET['size'] : '';
@@ -24,19 +24,10 @@ $last_max_price = mysqli_fetch_assoc($result2);
 $filter_by_max_price = $last_max_price['max_price'];
 
  $result = mysqli_query($conn, "SELECT * FROM shop_products where price between '$filter_by_min_price' AND '$filter_by_max_price' limit 0,12");
-}else if ($cat != '') {
+}else if ($cat_id != '') {
 
     // 2. Prepare statement
-    $stmt = mysqli_prepare($conn, "SELECT * FROM shop_products WHERE category = ?");
-
-    // Bind param
-    mysqli_stmt_bind_param($stmt, "s", $cat);
-
-    // Execute
-    mysqli_stmt_execute($stmt);
-
-    // Get result
-    $result = mysqli_stmt_get_result($stmt);
+    $result = mysqli_query($conn, "SELECT * FROM shop_products WHERE category_id ='$cat_id'");
 
 } else {
     // No filter

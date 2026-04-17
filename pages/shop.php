@@ -2,6 +2,11 @@
 include '../layouts/header.php'; ?>
 <?php
 include '../api/config/db.php';
+if(isset($_GET['cat_id'])){
+    $cat_id = $_GET['cat_id'];
+}else{
+    $cat_id  = null;
+}
 
 // User ke saare saved addresses nikalne ka logic
 $price_query = "SELECT * FROM price_ranges ORDER BY id ASC";
@@ -170,11 +175,12 @@ $total_prod = $total_products_res->fetch_assoc();
             let colors = getFilters('.filter-color');
             let sizes = getFilters('.filter-size');
             let prices = getFilters('.filter-price');
+            let cat_id = <?php echo $cat_id;?>
 
             $.ajax({
                 url: '../api/products/get_products.php',
                 type: 'GET',
-                data: { color: colors, size: sizes, price: prices },
+                data: { color: colors, size: sizes, price: prices,cat_id:cat_id },
                 dataType: 'json',
                 success: function(response) {
                     if (response.length === 0) {
