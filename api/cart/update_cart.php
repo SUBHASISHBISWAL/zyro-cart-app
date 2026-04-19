@@ -2,18 +2,21 @@
 session_start();
 include '../config/db.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_id'])) {
-    $user_id = $_SESSION['user_id'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cart_id = mysqli_real_escape_string($conn, $_POST['cart_id']);
-    $qty = mysqli_real_escape_string($conn, $_POST['qty']);
+    $qty = (int)$_POST['qty'];
 
-    // Update quantity
     if ($qty > 0) {
-        $sql = "UPDATE cart SET quantity = '$qty' WHERE id = '$cart_id' AND user_id = '$user_id'";
-        mysqli_query($conn, $sql);
+        if (isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
+            mysqli_query($conn, "UPDATE cart SET quantity = '$qty' WHERE id = '$cart_id' AND user_id = '$user_id'");
+        } else {
+            // Guest Cart Update
+            if (isset($_SESSION['guest_cart'][$cart_id])) {
+                $_SESSION['guest_cart'][$cart_id]['qty'] = $qty;
+            }
+        }
         echo json_encode(['status' => 'success']);
-    } else {
-        echo json_encode(['status' => 'error', 'message' => 'Quantity must be at least 1']);
     }
 }
 ?>

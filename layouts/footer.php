@@ -18,11 +18,11 @@
                         <h5 class="font-weight-bold text-dark mb-4">Quick Links</h5>
                         <div class="d-flex flex-column justify-content-start">
                             <a class="text-dark mb-2" href="<?php echo $base; ?>index.php"><i class="fa fa-angle-right mr-2"></i>Home</a>
-                            <a class="text-dark mb-2" href="<?php echo $base; ?>pages/shop.php"><i class="fa fa-angle-right mr-2"></i>Our Shop</a>
-                            <a class="text-dark mb-2" href="<?php echo $base; ?>pages/detail.php"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a>
+                            <a class="text-dark mb-2" href="<?php echo $base; ?>pages/shop.php"><i class="fa fa-angle-right mr-2"></i>Shop</a>
+                            <!-- <a class="text-dark mb-2" href="<?php echo $base; ?>pages/detail.php"><i class="fa fa-angle-right mr-2"></i>Shop Detail</a> -->
                             <a class="text-dark mb-2" href="<?php echo $base; ?>pages/cart.php"><i class="fa fa-angle-right mr-2"></i>Shopping Cart</a>
-                            <a class="text-dark mb-2" href="<?php echo $base; ?>pages/checkout.php"><i class="fa fa-angle-right mr-2"></i>Checkout</a>
-                            <a class="text-dark" href="<?php echo $base; ?>pages/contact.php"><i class="fa fa-angle-right mr-2"></i>Contact Us</a>
+                            <!-- <a class="text-dark mb-2" href="<?php echo $base; ?>pages/checkout.php"><i class="fa fa-angle-right mr-2"></i>Checkout</a> -->
+
                         </div>
                     </div>
                     <div class="col-md-4 mb-5">
@@ -84,7 +84,7 @@
     function getFilterProduct(inputKeyword){
         console.log(inputKeyword,'::::::::::inputKeyword')
 if(inputKeyword.length > 2){
-        
+
             $.ajax({
                 url: '../api/products/filter_products.php',
                 type: 'GET',

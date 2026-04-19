@@ -71,28 +71,23 @@ $base = isset($base) ? $base : '';
                     <span class="badge">0</span>
                 </a>
 
-                <?php
+               <?php
                     $cart_count = 0;
-                    $cart_link = $base . "pages/login.php"; // Default link login page rahega (bina login walo ke liye)
+                    $cart_link = $base . "pages/cart.php"; // FIX: Ab har koi Cart page par ja sakta hai!
 
-                    // Database Connection Check
                     if(!isset($conn)) {
                         $db_path = file_exists('api/config/db.php') ? 'api/config/db.php' : '../api/config/db.php';
                         if(file_exists($db_path)) include_once $db_path;
                     }
 
-                    // CONDITION 1: User Logged In Hai
                     if(isset($_SESSION['user_id']) && isset($conn)){
-                        $cart_link = $base . "pages/cart.php"; // Link change karke asali cart ka kar diya
                         $uid = $_SESSION['user_id'];
                         $cart_q = mysqli_query($conn, "SELECT SUM(quantity) as total FROM cart WHERE user_id='$uid'");
                         if($cart_q) {
                             $cart_res = mysqli_fetch_assoc($cart_q);
                             $cart_count = $cart_res['total'] ? $cart_res['total'] : 0;
                         }
-                    }
-                    // CONDITION 2: Guest User (Bina login wale)
-                    else {
+                    } else {
                         if (isset($_SESSION['guest_cart'])) {
                             foreach ($_SESSION['guest_cart'] as $item) {
                                 $cart_count += $item['qty'];

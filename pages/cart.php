@@ -1,25 +1,41 @@
 <?php
 session_start();
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
 $base = '../';
 include '../layouts/header.php';
 include '../api/config/db.php';
 
-$user_id = $_SESSION['user_id'];
-
-// Get Cart Items joined with Products
-$cart_query = "SELECT c.id as cart_id, c.quantity, c.size, c.color, p.name, p.price, p.image_url
-               FROM cart c
-               JOIN shop_products p ON c.product_id = p.id
-               WHERE c.user_id = '$user_id'";
-$cart_items = mysqli_query($conn, $cart_query);
-
+$cart_items_data = [];
 $subtotal = 0;
-$shipping = 10; // Fixed shipping for now
+$shipping = 10;
+
+// DATA FETCH LOGIC (Login vs Guest)
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    $cart_query = "SELECT c.id as cart_id, c.quantity, c.size, c.color, p.name, p.price, p.image_url
+                   FROM cart c JOIN shop_products p ON c.product_id = p.id WHERE c.user_id = '$user_id'";
+    $result = mysqli_query($conn, $cart_query);
+    while($row = mysqli_fetch_assoc($result)) {
+        $cart_items_data[] = $row;
+    }
+} else {
+    if (isset($_SESSION['guest_cart']) && !empty($_SESSION['guest_cart'])) {
+        foreach($_SESSION['guest_cart'] as $key => $item) {
+            $p_id = $item['product_id'];
+            $p_query = mysqli_query($conn, "SELECT name, price, image_url FROM shop_products WHERE id='$p_id'");
+            if ($p_row = mysqli_fetch_assoc($p_query)) {
+                $cart_items_data[] = [
+                    'cart_id' => $key, // Session key as ID
+                    'quantity' => $item['qty'],
+                    'size' => $item['size'],
+                    'color' => $item['color'],
+                    'name' => $p_row['name'],
+                    'price' => $p_row['price'],
+                    'image_url' => $p_row['image_url']
+                ];
+            }
+        }
+    }
+}
 ?>
 
 <div class="container-fluid bg-secondary mb-5">
@@ -47,62 +63,44 @@ $shipping = 10; // Fixed shipping for now
                     </tr>
                 </thead>
                 <tbody class="align-middle" id="cart-tbody">
-
-                    <?php if(mysqli_num_rows($cart_items) > 0): ?>
-                        <?php while($row = mysqli_fetch_assoc($cart_items)):
+                    <?php if(count($cart_items_data) > 0): ?>
+                        <?php foreach($cart_items_data as $row):
                             $images = json_decode($row['image_url'], true);
                             $img = (is_array($images) && count($images) > 0) ? $images[0] : '../assets/img/default.jpg';
                             $item_total = $row['price'] * $row['quantity'];
                             $subtotal += $item_total;
                         ?>
-                        <tr id="cart-row-<?php echo $row['cart_id']; ?>">
+                        <tr id="cart-row-<?php echo htmlspecialchars($row['cart_id']); ?>">
                             <td class="align-middle text-left">
                                 <img src="<?php echo $img; ?>" alt="" style="width: 50px; height: 50px; object-fit: cover; margin-right: 10px;">
                                 <?php echo htmlspecialchars($row['name']); ?>
-                                <br><small class="text-muted ml-5">Size: <?php echo $row['size']; ?> | Color: <?php echo $row['color']; ?></small>
+                                <br><small class="text-muted ml-5">Size: <?php echo htmlspecialchars($row['size']); ?> | Color: <?php echo htmlspecialchars($row['color']); ?></small>
                             </td>
                             <td class="align-middle">$<span class="item-price"><?php echo $row['price']; ?></span></td>
                             <td class="align-middle">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-minus-cart" data-id="<?php echo $row['cart_id']; ?>">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
+                                        <button class="btn btn-sm btn-primary btn-minus-cart" data-id="<?php echo htmlspecialchars($row['cart_id']); ?>"><i class="fa fa-minus"></i></button>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm bg-secondary text-center qty-input" id="qty-<?php echo $row['cart_id']; ?>" value="<?php echo $row['quantity']; ?>" readonly>
+                                    <input type="text" class="form-control form-control-sm bg-secondary text-center qty-input" id="qty-<?php echo htmlspecialchars($row['cart_id']); ?>" value="<?php echo $row['quantity']; ?>" readonly>
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-plus-cart" data-id="<?php echo $row['cart_id']; ?>">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
+                                        <button class="btn btn-sm btn-primary btn-plus-cart" data-id="<?php echo htmlspecialchars($row['cart_id']); ?>"><i class="fa fa-plus"></i></button>
                                     </div>
                                 </div>
                             </td>
-                            <td class="align-middle">$<span class="item-total" id="total-<?php echo $row['cart_id']; ?>"><?php echo $item_total; ?></span></td>
+                            <td class="align-middle">$<span class="item-total" id="total-<?php echo htmlspecialchars($row['cart_id']); ?>"><?php echo $item_total; ?></span></td>
                             <td class="align-middle">
-                                <button class="btn btn-sm btn-danger btn-remove" data-id="<?php echo $row['cart_id']; ?>">
-                                    <i class="fa fa-times"></i>
-                                </button>
+                                <button class="btn btn-sm btn-danger btn-remove" data-id="<?php echo htmlspecialchars($row['cart_id']); ?>"><i class="fa fa-times"></i></button>
                             </td>
                         </tr>
-                        <?php endwhile; ?>
+                        <?php endforeach; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="5" class="text-center py-4">Your cart is empty!</td>
-                        </tr>
+                        <tr><td colspan="5" class="text-center py-4">Your cart is empty!</td></tr>
                     <?php endif; ?>
-
                 </tbody>
             </table>
         </div>
         <div class="col-lg-4">
-            <form class="mb-5" action="">
-                <div class="input-group">
-                    <input type="text" class="form-control p-4" placeholder="Coupon Code">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary">Apply Coupon</button>
-                    </div>
-                </div>
-            </form>
             <div class="card border-secondary mb-5">
                 <div class="card-header bg-secondary border-0">
                     <h4 class="font-weight-semi-bold m-0">Cart Summary</h4>
@@ -122,36 +120,32 @@ $shipping = 10; // Fixed shipping for now
                         <h5 class="font-weight-bold">Total</h5>
                         <h5 class="font-weight-bold">$<span id="summary-total"><?php echo ($subtotal > 0) ? ($subtotal + $shipping) : 0; ?></span></h5>
                     </div>
-                    <a href="checkout.php" class="btn btn-block btn-primary my-3 py-3 <?php echo ($subtotal == 0) ? 'disabled' : ''; ?>">Proceed To Checkout</a>
+
+                    <?php
+                        // Agar login hai toh checkout, warna login page par bhejo
+                        $checkout_href = isset($_SESSION['user_id']) ? "checkout.php" : "login.php";
+                    ?>
+                    <a href="<?php echo $checkout_href; ?>" class="btn btn-block btn-primary my-3 py-3 <?php echo ($subtotal == 0) ? 'disabled' : ''; ?>">Proceed To Checkout</a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(document).ready(function() {
-
-    // Total calculation function
     function updateCartTotals() {
         let subtotal = 0;
-        $('.item-total').each(function() {
-            subtotal += parseFloat($(this).text());
-        });
-
+        $('.item-total').each(function() { subtotal += parseFloat($(this).text()); });
         $('#summary-subtotal').text(subtotal.toFixed(2));
-
         let shipping = subtotal > 0 ? 10 : 0;
         $('#summary-shipping').text(shipping.toFixed(2));
         $('#summary-total').text((subtotal + shipping).toFixed(2));
-
-        if(subtotal === 0) {
-            $('.btn-block').addClass('disabled');
-        }
+        if(subtotal === 0) { $('.btn-block').addClass('disabled'); }
     }
 
-    // Update DB & Row UI via AJAX
     function updateBackend(cart_id, qty, rowElement) {
         $.ajax({
             url: '../api/cart/update_cart.php',
@@ -161,88 +155,67 @@ $(document).ready(function() {
             success: function(res) {
                 if(res.status === 'success') {
                     let price = parseFloat(rowElement.find('.item-price').text());
-                    let new_total = price * qty;
-                    rowElement.find('.item-total').text(new_total.toFixed(2));
+                    rowElement.find('.item-total').text((price * qty).toFixed(2));
                     updateCartTotals();
                 }
             }
         });
     }
 
-    // Remove logic alag se taaki Minus Button bhi use kar sake
     function removeCartItem(cart_id, rowElement) {
         Swal.fire({
             title: 'Remove item?',
-            text: "Are you sure you want to remove this from your cart?",
+            text: "Are you sure you want to remove this?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, remove it!'
+            confirmButtonColor: '#d33', cancelButtonColor: '#3085d6', confirmButtonText: 'Yes!'
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
                     url: '../api/cart/remove_cart.php',
-                    type: 'POST',
-                    data: { cart_id: cart_id },
-                    dataType: 'json',
+                    type: 'POST', data: { cart_id: cart_id }, dataType: 'json',
                     success: function(res) {
                         if(res.status === 'success') {
-                            rowElement.fadeOut(300, function() {
-                                $(this).remove();
-                                updateCartTotals();
-                            });
-                            $('#cart-badge').text(res.cart_count); // Update Header Badge Live
-                            Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Item removed', showConfirmButton: false, timer: 2000 });
+                            rowElement.fadeOut(300, function() { $(this).remove(); updateCartTotals(); });
+                            $('#cart-badge').text(res.cart_count);
                         }
                     }
                 });
             } else {
-                // Agar user delete cancel kare, to quantity wapas 1 kar do
                 let input = rowElement.find('.qty-input');
-                if(input.val() == 0) {
-                    input.val(1);
-                }
+                if(input.val() == 0) input.val(1);
             }
         });
     }
 
-    // Plus Button Fix
     $('.btn-plus-cart').off('click').on('click', function(e) {
         e.preventDefault();
         let cart_id = $(this).data('id');
-        let input = $('#qty-' + cart_id);
-
-        // Template script ko override karke force update
+        let input = $(this).closest('.quantity').find('.qty-input');
         let qty = parseInt(input.val()) + 1;
         input.val(qty);
         updateBackend(cart_id, qty, $(this).closest('tr'));
     });
 
-    // Minus Button Fix & Auto-Remove
     $('.btn-minus-cart').off('click').on('click', function(e) {
         e.preventDefault();
         let cart_id = $(this).data('id');
-        let input = $('#qty-' + cart_id);
+        let input = $(this).closest('.quantity').find('.qty-input');
         let qty = parseInt(input.val());
-
         if (qty > 1) {
             qty = qty - 1;
             input.val(qty);
             updateBackend(cart_id, qty, $(this).closest('tr'));
         } else if (qty === 1) {
-            input.val(0); // Pehle 0 dikhao, fir popup lao
+            input.val(0);
             removeCartItem(cart_id, $(this).closest('tr'));
         }
     });
 
-    // Cross (X) Remove Item Button
     $('.btn-remove').off('click').on('click', function(e) {
         e.preventDefault();
-        let cart_id = $(this).data('id');
-        removeCartItem(cart_id, $(this).closest('tr'));
+        removeCartItem($(this).data('id'), $(this).closest('tr'));
     });
-
 });
 </script>
 <?php include '../layouts/footer.php'; ?>
