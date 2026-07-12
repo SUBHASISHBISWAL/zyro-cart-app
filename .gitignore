@@ -1,0 +1,34 @@
+# OS / filesystem
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Editor
+.vscode/
+
+# Agent / tooling config
+.kilo/
+kilo.json
+AGENTS.md
+
+# PHP
+*.log
+error_log
+/vendor/
+
+# Runtime user uploads (profile images)
+assets/img/users/*.jpeg
+assets/img/users/*.jpg
+assets/img/users/*.png
+assets/img/users/*.heic
+assets/img/users/*.gif
+assets/img/users/*.webp
+
+# Redundant leftovers (not referenced in code)
+walkthrough.md
+walkthrough_1.md
+bootstrap-shop-template.jpg
+
+# Misc
+.cache/
